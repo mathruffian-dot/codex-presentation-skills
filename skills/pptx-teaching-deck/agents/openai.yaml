@@ -1,0 +1,4 @@
+interface:
+  display_name: "PPTX 教學簡報"
+  short_description: "製作可編輯、可驗證的教學與研究 PowerPoint 簡報"
+  default_prompt: "Use $pptx-teaching-deck to turn this source into an editable teaching presentation and verify every rendered slide."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML 教學簡報"
+  short_description: "製作可離線播放、鍵盤換頁並通過瀏覽器檢查的 HTML 簡報"
+  default_prompt: "Use $html-slide-deck to turn this content into an offline HTML slide deck and test it in a browser."

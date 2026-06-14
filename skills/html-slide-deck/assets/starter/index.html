@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML 教學簡報</title>
+  <style>
+    :root {
+      --paper: #f7f4eb;
+      --ink: #18212b;
+      --muted: #5c6874;
+      --accent: #0e7c7b;
+      --accent-2: #e36414;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      color: var(--ink);
+      background: #111820;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    .deck { width: 100%; height: 100%; }
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: clamp(36px, 6vw, 92px);
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .slide.active { display: grid; align-content: center; gap: clamp(20px, 3vw, 44px); }
+    .eyebrow { color: var(--accent); font-weight: 800; letter-spacing: .08em; }
+    h1, h2, p { margin: 0; }
+    h1 { max-width: 14ch; font-size: clamp(52px, 8vw, 122px); line-height: 1.02; }
+    h2 { font-size: clamp(40px, 6vw, 88px); line-height: 1.08; }
+    p, li { font-size: clamp(24px, 3vw, 46px); line-height: 1.45; }
+    .lead { max-width: 28ch; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card { padding: 28px; border: 2px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 20px; }
+    .card b { display: block; margin-bottom: 10px; color: var(--accent-2); font-size: clamp(28px, 3vw, 46px); }
+    nav {
+      position: fixed; left: 24px; right: 24px; bottom: 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      color: white; z-index: 10;
+    }
+    button, select {
+      border: 0; border-radius: 999px; padding: 10px 16px;
+      color: white; background: rgba(255,255,255,.16); font: inherit;
+    }
+    button { cursor: pointer; }
+    .notes { display: none; }
+    @media (max-width: 780px) {
+      .grid { grid-template-columns: 1fr; }
+      .slide { overflow: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    @media print {
+      html, body { height: auto; overflow: visible; background: white; }
+      .slide, .slide.active {
+        display: grid; width: 100vw; height: 100vh; break-after: page;
+      }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide active" data-title="封面">
+      <div class="eyebrow">研習主題</div>
+      <h1>一頁只說一件事</h1>
+      <p class="lead">以清楚脈絡、穩定版面與可驗證互動製作 HTML 簡報。</p>
+      <aside class="notes">說明今天的帶走句與簡報使用方式。</aside>
+    </section>
+
+    <section class="slide" data-title="核心概念">
+      <div class="eyebrow">三個核心概念</div>
+      <h2>內容、脈絡、驗證</h2>
+      <div class="grid">
+        <div class="card"><b>內容</b><p>留下觀眾真正需要掌握的資訊。</p></div>
+        <div class="card"><b>脈絡</b><p>讓每頁知道從哪裡來、往哪裡去。</p></div>
+        <div class="card"><b>驗證</b><p>用瀏覽器逐頁檢查，而不是只看原始碼。</p></div>
+      </div>
+      <aside class="notes">請觀眾判斷自己最常漏掉哪一項。</aside>
+    </section>
+
+    <section class="slide" data-title="行動">
+      <div class="eyebrow">帶走一句話</div>
+      <h1>先建立理解，再增加效果</h1>
+      <p class="lead">按 Home 回到第一頁，或使用下方導覽。</p>
+      <aside class="notes">收尾並提醒成果檔案位置。</aside>
+    </section>
+  </main>
+
+  <nav aria-label="投影片導覽">
+    <button id="prev" type="button">上一頁</button>
+    <select id="jump" aria-label="選擇投影片"></select>
+    <span id="counter">1 / 3</span>
+    <button id="next" type="button">下一頁</button>
+  </nav>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const counter = document.querySelector("#counter");
+    const jump = document.querySelector("#jump");
+    let current = Math.max(0, Math.min(slides.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+
+    slides.forEach((slide, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = `${index + 1}. ${slide.dataset.title || "未命名"}`;
+      jump.append(option);
+    });
+
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      jump.value = String(current);
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    document.querySelector("#prev").addEventListener("click", () => show(current - 1));
+    document.querySelector("#next").addEventListener("click", () => show(current + 1));
+    jump.addEventListener("change", (event) => show(Number(event.target.value)));
+    addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) show(current + 1);
+      if (["ArrowLeft", "PageUp"].includes(event.key)) show(current - 1);
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+    show(current);
+  </script>
+</body>
+</html>
