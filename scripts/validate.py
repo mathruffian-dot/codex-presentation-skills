@@ -3,7 +3,12 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
-SKILLS = ("pptx-teaching-deck", "html-slide-deck")
+SKILLS = (
+    "pptx-teaching-deck",
+    "html-slide-deck",
+    "image-poster-deck",
+    "image-editable-deck",
+)
 
 
 def fail(message: str) -> None:
@@ -11,8 +16,15 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+TEXT_SUFFIXES = {".md", ".yaml", ".yml", ".html", ".py", ".ps1", ".txt", ""}
+
 for path in ROOT.rglob("*"):
-    if path.is_file() and ".git" not in path.parts:
+    if (
+        path.is_file()
+        and ".git" not in path.parts
+        and "__pycache__" not in path.parts
+        and path.suffix.lower() in TEXT_SUFFIXES
+    ):
         try:
             path.read_text(encoding="utf-8")
         except UnicodeDecodeError as exc:
@@ -29,6 +41,9 @@ for name in SKILLS:
         fail(f"{skill_file} name does not match folder")
     if "description:" not in frontmatter:
         fail(f"{skill_file} is missing description")
+    agent_file = ROOT / "skills" / name / "agents" / "openai.yaml"
+    if not agent_file.exists():
+        fail(f"{name} is missing agents/openai.yaml")
 
 html = (ROOT / "skills" / "html-slide-deck" / "assets" / "starter" / "index.html").read_text(
     encoding="utf-8"
@@ -43,5 +58,10 @@ checks = {
 for label, passed in checks.items():
     if not passed:
         fail(f"HTML starter failed: {label}")
+
+for name in ("image-poster-deck", "image-editable-deck"):
+    script = ROOT / "skills" / name / "scripts" / "pack_pptx.py"
+    if not script.exists():
+        fail(f"{name} is missing pack_pptx.py")
 
 print("Validation passed.")

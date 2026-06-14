@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI 圖片型簡報"
+  short_description: "使用 Codex 內建生圖製作整頁圖文融合的圖片型簡報"
+  default_prompt: "Use $image-poster-deck to create a visual image-first presentation with one generated full-slide image per page."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI 背景可編輯簡報"
+  short_description: "使用 Codex 生無字背景並疊加可編輯 PowerPoint 文字"
+  default_prompt: "Use $image-editable-deck to generate text-free slide backgrounds and add accurate editable PowerPoint text."

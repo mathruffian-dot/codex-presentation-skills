@@ -6,7 +6,12 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSCommandPath
 $sourceRoot = Join-Path $repoRoot "skills"
-$skillNames = @("pptx-teaching-deck", "html-slide-deck")
+$skillNames = @(
+    "pptx-teaching-deck",
+    "html-slide-deck",
+    "image-poster-deck",
+    "image-editable-deck"
+)
 
 New-Item -ItemType Directory -Force -Path $TargetRoot | Out-Null
 
