@@ -26,6 +26,8 @@ cd codex-presentation-skills
 
 重新啟動 Codex 後即可使用。
 
+也可只下載單一 Skill 資料夾，再放入 `~/.codex/skills/`。
+
 ## 使用範例
 
 ```text
@@ -49,6 +51,14 @@ cd codex-presentation-skills
 - HTML Skill 預設使用原生 HTML／CSS／JavaScript，可直接離線開啟。
 - 不應將 API key、學生個資或未公開研究資料寫入簡報。
 - AI 產出仍需人工核對數值、引文、圖片授權與版面。
+
+## 驗證
+
+```powershell
+python .\scripts\validate.py
+```
+
+GitHub Actions 會在每次 push 與 pull request 自動執行相同檢查。
 
 ## 授權
 
